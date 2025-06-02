@@ -1,63 +1,57 @@
 
-const mostListenedModel = require("../models/most-listened");
+const AppError = require("../ErrorHandler/appError");
+const catchAsync = require("../ErrorHandler/catchAsync");
+const playlistModel = require("../models/playlistModel");
 
-exports.getAllListenedSong = async (req, res) => {
-  try {
-    const listened = await mostListenedModel.find();
+exports.getAllListenedSong = catchAsync(async (req, res,next) => {
+  
+ 
+    const listened = await playlistModel
+      .find({ listened: { $gt: 10 } })
+      .sort({ listened: -1 });
+
+      if(listened.length == 0){
+        return next(new AppError('no listen song found',400))
+      }
     res.status(200).json({
       status: "success",
-      result:listened.length,
-      data: {
-        listened,
-      },
+      result: listened.length,
+      listened,
     });
-  } catch (error) {
-    res.status(400).json({
-      status: "failed",
-      message: error,
-    });
-  }
-};
-exports.getOneListenedSong = async (req, res) => {
-  try {
-   console.log(req.params.id)
-    const song = await mostListenedModel.findById(req.params.id);
+  
+  
+});
+
+exports.getOneListenedSong = catchAsync( async (req, res) => {
+
+   const ListenSongId=(req.params.id)
+    const ListendSong = await playlistModel.findById(ListenSongId);
+    if(!ListendSong){
+      return next(new AppError('no listen song found with that id',400))
+    }
     res.status(200).json({
       status: "success",
-      data: {
-        song,
-      },
+      ListendSong
     });
-  } catch (error) {
-    res.status(400).json({
-      status: "failed",
-      message: error,
-    });
-  }
-};
+  
+});
 
-exports.createMostListened= async (req, res) => {
-  try {
-   // console.log(req.body)
-    const newMostListened= await mostListenedModel.create(req.body);
-    res.status(201).json({
-      status: "success",
-      data: {
-        newMostListened,
-      },
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "failed",
-      message: error,
-    });
-  }
-};
+// exports.createMostListened=  catchAsync(async (req, res) => {
+    
+//     const newMostListened= await playlistModel.create(req.body);
+//     res.status(201).json({
+//       status: "success",
+//       data: {
+//         newMostListened,
+//       },
+//     });
 
-exports.updateMostListened= async(req, res) => {
-   try {
+// });
+
+exports.updateMostListened= catchAsync( async(req, res) => {
+   
       // console.log(req.body)
-       const newMostListened= await mostListenedModel.findByIdAndUpdate(req.params.id , req.body,{
+       const newMostListened= await playlistModel.findByIdAndUpdate(req.params.id , req.body,{
          new:true , runValidators:true
        });
        res.status(201).json({
@@ -66,25 +60,20 @@ exports.updateMostListened= async(req, res) => {
             newMostListened,
          },
        });
-     } catch (error) {
-       res.status(400).json({
-         status: "failed",
-         message: error,
-       });
-     }
-};
-exports.deleteMostListened= async(req, res) => {
-   try {
+    
+});
+exports.deleteMostListened= catchAsync( async(req, res) => {
+  // console.log(req.id)
+       const listenedSongId=req.params.id 
+      const listenedSong=await playlistModel.findById(listenedSongId)
+   if(!listenedSong){
+    return next(new AppError('no listen song found with that id',400))
+  }
       // console.log(req.body)
-        await mostListenedModel.findByIdAndDelete(req.params.id )
+        await playlistModel.findByIdAndDelete()
        res.status(201).json({
          status: "success",
          
        });
-     } catch (error) {
-       res.status(400).json({
-         status: "failed",
-         message: error,
-       });
-     }
-};
+    
+});
