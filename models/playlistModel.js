@@ -3,15 +3,8 @@ const dotenv = require("dotenv");
 
 dotenv.config({ path: "./.env" });
 
-// const DB = process.env.DATABASE;
-// mongoose
-//   .connect(DB)
-//   .then(() => {
-//     console.log("database connected successfully");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
+
+
 
 const playlistSchema = new mongoose.Schema({
   albumtitle: {
@@ -44,10 +37,20 @@ const playlistSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+ 
   number_of_track: {
     type: Number,
+    
   },
+  name_of_track:{
+    type:String,
+ }
+});
+
+playlistSchema.set('toJSON', {
+  virtuals: true
 });
 
 const playlistModel = mongoose.model("playlist", playlistSchema);
+
 module.exports = playlistModel;
