@@ -1,27 +1,45 @@
 
-const trackModel = require("../models/track-of-the-week");
+const playlistModel = require("../models/playlistModel");
 
 exports.getAllTrack = async (req, res) => {
+  const filter={}
+ 
   try {
-    const track = await trackModel.find();
+    const albums = await playlistModel.find(); // Find all albums
+    for (let index = 0; index < albums.length; index++) {
+      const album = albums[index];
+      // console.log("album tracks");
+      // console.log(album.track);
+  
+      // Generate random number 
+      const randomNumber = Math.floor(Math.random() * album.track.length); 
+   
+      const randomTrack = album.track[randomNumber];
+  
+     
+      album.track = [randomTrack];
+      // console.log("random album track selected");
+      // console.log(album);
+    }
+  
+   
     res.status(200).json({
       status: "success",
-      result:track.length,
-      data: {
-        track,
-      },
+      result: albums.length,
+      albums, 
     });
   } catch (error) {
     res.status(400).json({
       status: "failed",
-      message: error,
+      message: error.message,
     });
   }
+  
 };
 exports.getOneWeekTrack = async (req, res) => {
   try {
    console.log(req.params.id)
-    const track = await trackModel.findById(req.params.id);
+    const track = await playlistModel.findById(req.params.id);
     res.status(200).json({
       status: "success",
       data: {
@@ -39,7 +57,7 @@ exports.getOneWeekTrack = async (req, res) => {
 exports.createWeekTrack= async (req, res) => {
   try {
    // console.log(req.body)
-    const newWeekOfTrack= await trackModel.create(req.body);
+    const newWeekOfTrack= await playlistModel.create(req.body);
     res.status(201).json({
       status: "success",
       data: {
@@ -57,7 +75,7 @@ exports.createWeekTrack= async (req, res) => {
 exports.updateWeekTrack= async(req, res) => {
    try {
       // console.log(req.body)
-       const  newWeekOfTrack= await trackModel.findByIdAndUpdate(req.params.id , req.body,{
+       const  newWeekOfTrack= await playlistModel.findByIdAndUpdate(req.params.id , req.body,{
          new:true , runValidators:true
        });
        res.status(201).json({
@@ -76,7 +94,7 @@ exports.updateWeekTrack= async(req, res) => {
 exports.deleteWeekOfTrack= async(req, res) => {
    try {
       // console.log(req.body)
-        await trackModel.findByIdAndDelete(req.params.id )
+        await playlistModel.findByIdAndDelete(req.params.id )
        res.status(201).json({
          status: "success",
          
