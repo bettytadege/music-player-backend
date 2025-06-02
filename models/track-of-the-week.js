@@ -3,16 +3,6 @@ const dotenv = require("dotenv");
 
 dotenv.config({ path: "./.env" });
 
-// const DB = process.env.DATABASE;
-// mongoose
-//   .connect(DB)
-//   .then(() => {
-//     console.log("database connected successfully");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-
 const trackSchema = new mongoose.Schema({
   albumtitle: {
     type: String,
@@ -20,6 +10,11 @@ const trackSchema = new mongoose.Schema({
   },
   mix: {
     type: String,
+  },
+  albumID:{
+    type:mongoose.Schema.objectId,
+    ref:'playlist',
+    required:true
   },
   track_url: String,
   poster_url: {
@@ -40,6 +35,7 @@ const trackSchema = new mongoose.Schema({
   number_of_track: {
     type: Number,
   },
+  
 });
 
 const trackOfTheWeekModel = mongoose.model("track", trackSchema);
