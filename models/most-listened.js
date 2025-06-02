@@ -22,14 +22,6 @@ const mostListenedSchema = new mongoose.Schema({
     type: String,
   },
   track_url: String,
-//   track: [
-//     {
-//       trackNumber: Number,
-//       title: String,
-//       duration: Number,
-//       track_url: String,
-//     }
-//   ],
   poster_url: {
     type: String,
     require: [true, "poster url is required"],
