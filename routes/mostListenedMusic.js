@@ -3,7 +3,7 @@ const mostListenedController=require('../controller/mostListenedController')
 const router=express.Router()
 router.route('/')
 .get(mostListenedController.getAllListenedSong)
-.post(mostListenedController.createMostListened)
+// .post(mostListenedController.createMostListened)
 
 router.route('/:id')
 .get(mostListenedController.getOneListenedSong)
