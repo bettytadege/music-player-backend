@@ -18,10 +18,22 @@ if(process.env.NODE_ENV === 'development'){
 
 conDB()
 app.use(express.json())
-app.get('/',(req,res,next)=>{
-    res.send('hello from server')
-    next()
-})
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>🎵 Music Player API</h1>
+    <
+    <h3>Available Endpoints:</h3>
+    <ul>
+      <li>GET /api/playlists - Get all playlists</li>
+      <li>POST /api/playlists - Create a playlist</li>
+      <li>GET /api/playlists/:id - Get a playlist by ID</li>
+      <li>PUT /api/playlists/:id - Update a playlist</li>
+      <li>DELETE /api/playlists/:id - Delete a playlist</li>
+    </ul>
+    <p>Hosted on Render: <a href="https://musicplayer-backend-fduc.onrender.com" target="_blank">Go to API</a></p>
+  `);
+});
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.post('/upload', upload, (req, res) => {
