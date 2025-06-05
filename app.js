@@ -4,17 +4,22 @@ const dotenv =require('dotenv')
 const playlistRoute=require('./routes/playlistRoute')
 const mostListenedMusic=require('./routes/mostListenedMusic')
 const trackOfTheWeekRoute=require('./routes/trackOfTheWeekRoute')
+const userRoutes=require('./routes/userRoutes')
 const conDB=require('./config/DB')
 const cors=require('cors')
-const AppError = require('./ErrorHandler/appError')
-const upload=require('./config/multer')
-const app=express()
 const path = require('path')
+const upload=require('./config/multer')
+
+const AppError = require('./ErrorHandler/appError')
+const app=express()
 app.use(cors())
 if(process.env.NODE_ENV === 'development'){
 
     app.use(morgan('dev'))
 }
+//  app.use('*',(req,res,next)=>{
+//     next(new AppError('not found',404))
+//  })
 
 conDB()
 app.use(express.json())
@@ -46,6 +51,7 @@ app.post('/upload', upload, (req, res) => {
   res.json({ fileUrl, message: 'File uploaded successfully' });
 });
 
+app.use('/api/users',userRoutes)
 app.use('/api/v1/playlist-for-you',playlistRoute)
 app.use('/api/v1/most-listened',mostListenedMusic)
 app.use('/api/v1/track-of-the-week',trackOfTheWeekRoute)
